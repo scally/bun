@@ -686,6 +686,7 @@ function getLazyWriteStream() {
     bytesWritten = 0;
     pos;
     [writeStreamPathFastPathSymbol];
+    [writeStreamSymbol] = true;
     start;
 
     [writeStreamPathFastPathCallSymbol](readStream, pipeOpts) {
@@ -878,7 +879,7 @@ export var WriteStream = Object.defineProperty(
     return new _InternalWriteStream(path, options);
   },
   Symbol.hasInstance,
-  { value: (instance) => (instance[writeStreamSymbol] = true) },
+  { value: (instance) => instance[writeStreamSymbol] === true },
 );
 
 export var ReadStream = Object.defineProperty(
@@ -887,7 +888,7 @@ export var ReadStream = Object.defineProperty(
     return new _InternalReadStream(path, options);
   },
   Symbol.hasInstance,
-  { value: (instance) => (instance[readStreamSymbol] = true) },
+  { value: (instance) => instance[readStreamSymbol] === true },
 );
 
 Object.defineProperties(fs, {
