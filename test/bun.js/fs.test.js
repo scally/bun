@@ -22,6 +22,15 @@ import fs, {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+import {
+  ReadStream as ReadStream_,
+  WriteStream as WriteStream_,
+} from "../fixtures/export-lazy-fs-streams/export-from";
+import {
+  ReadStream as ReadStreamStar_,
+  WriteStream as WriteStreamStar_,
+} from "../fixtures/export-lazy-fs-streams/export-*-from";
+
 const Buffer = globalThis.Buffer || Uint8Array;
 
 if (!import.meta.dir) {
@@ -503,6 +512,34 @@ describe("fs.WriteStream", () => {
       done();
     });
   });
+
+  it("should work if re-exported by name", () => {
+    const stream = new WriteStream_("test.txt");
+    expect(stream instanceof WriteStream_).toBe(true);
+    expect(stream instanceof WriteStreamStar_).toBe(true);
+    expect(stream instanceof fs.WriteStream).toBe(true);
+  });
+
+  it("should work if re-exported by name, called without new", () => {
+    const stream = WriteStream_("test.txt");
+    expect(stream instanceof WriteStream_).toBe(true);
+    expect(stream instanceof WriteStreamStar_).toBe(true);
+    expect(stream instanceof fs.WriteStream).toBe(true);
+  });
+
+  it("should work if re-exported, as export * from ...", () => {
+    const stream = new WriteStreamStar_("test.txt");
+    expect(stream instanceof WriteStream_).toBe(true);
+    expect(stream instanceof WriteStreamStar_).toBe(true);
+    expect(stream instanceof fs.WriteStream).toBe(true);
+  });
+
+  it("should work if re-exported, as export * from..., called without new", () => {
+    const stream = WriteStreamStar_("test.txt");
+    expect(stream instanceof WriteStream_).toBe(true);
+    expect(stream instanceof WriteStreamStar_).toBe(true);
+    expect(stream instanceof fs.WriteStream).toBe(true);
+  });
 });
 
 describe("fs.ReadStream", () => {
@@ -541,6 +578,34 @@ describe("fs.ReadStream", () => {
       expect(data).toBe("Test file written successfully");
       done();
     });
+  });
+
+  it("should work if re-exported by name", () => {
+    const stream = new ReadStream_("test.txt");
+    expect(stream instanceof ReadStream_).toBe(true);
+    expect(stream instanceof ReadStreamStar_).toBe(true);
+    expect(stream instanceof fs.ReadStream).toBe(true);
+  });
+
+  it("should work if re-exported by name, called without new", () => {
+    const stream = ReadStream_("test.txt");
+    expect(stream instanceof ReadStream_).toBe(true);
+    expect(stream instanceof ReadStreamStar_).toBe(true);
+    expect(stream instanceof fs.ReadStream).toBe(true);
+  });
+
+  it("should work if re-exported as export * from ...", () => {
+    const stream = new ReadStreamStar_("test.txt");
+    expect(stream instanceof ReadStreamStar_).toBe(true);
+    expect(stream instanceof ReadStream_).toBe(true);
+    expect(stream instanceof fs.ReadStream).toBe(true);
+  });
+
+  it("should work if re-exported as export * from ..., called without new", () => {
+    const stream = ReadStreamStar_("test.txt");
+    expect(stream instanceof ReadStreamStar_).toBe(true);
+    expect(stream instanceof ReadStream_).toBe(true);
+    expect(stream instanceof fs.ReadStream).toBe(true);
   });
 });
 
